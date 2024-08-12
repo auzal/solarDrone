@@ -62,9 +62,9 @@ function draw() {
     synth.update(player.getFrame());
     synth.render();
 
-   // blendMode(OVERLAY);
-    //image(grain[frameCount%4], 0, 0);
-   // blendMode(BLEND);
+    blendMode(OVERLAY);
+    image(grain[frameCount%4], 0, 0);
+    blendMode(BLEND);
 
     stroke(255);
     noFill();
