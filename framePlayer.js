@@ -50,10 +50,11 @@ class FramePlayer{
             
         translate(width/2 - this.frameWidth/2, height/2 - this.frameHeight/2);
         image(this.frames[this.index], 0, 0);
-        this.renderProgressBar();    
+        
                 
         pop();
 
+        this.renderProgressBar();    
     
     
     }
@@ -85,15 +86,18 @@ class FramePlayer{
     // ----------------------------------------------------------------
 
     renderProgressBar(){
+     
+       
         push();
         let barHeight = 2;
-        translate(0, this.frameHeight);
+        translate(0, height);
         fill(0,0,0);
         noStroke();
         rect(0,0,this.frameWidth, -barHeight);
-        fill(220);
+        fill(242, 190, 92);
         rect(0,0,this.index/this.frames.length * this.frameWidth, -barHeight);
         pop();
+      
     }
 
     // ----------------------------------------------------------------

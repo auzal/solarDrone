@@ -13,9 +13,10 @@ class FlareSynth{
         this.samplerY = 0;
         this.samplerRadius = 200;
         this.samplerAngle = 0;
+        this.filterFreq = 0;
 
         for(let i = 0 ; i < stepCount ; i++){
-            this.analyzers[i] = new FlareAnalizer((360/stepCount * i) - 90, this.diam/2, this.sampleWidth, this.sampleHeight); 
+            this.analyzers[i] = new FlareAnalizer((360/stepCount * i) - 90, this.diam/2, this.sampleWidth, this.sampleHeight, i+1, freqs[i]); 
         }
 
         this.lowPass = new p5.LowPass();
@@ -27,12 +28,8 @@ class FlareSynth{
             this.oscillators[i] = new p5.Oscillator(freqs[i], 'sine');
             this.oscillators[i].amp(0);
             this.oscillators[i].disconnect();
-            this.oscillators[i].connect(this.lowPass);
-           
+            this.oscillators[i].connect(this.lowPass); 
         }
-
-        
-
         
     }
 
@@ -62,7 +59,7 @@ class FlareSynth{
 
       
 
-       // this.renderDebug();
+       this.renderData();
     }
     
     // ----------------------------------------------------------------
@@ -72,9 +69,38 @@ class FlareSynth{
         push();
 
         noFill();
-        stroke(255);
-        ellipse(this.samplerX,this.samplerY,5,5);
-        line(this.samplerX, this.samplerY, 0, 0);
+        stroke(255);        
+
+        ellipse(0,0,30,30);
+      //  rect(0,0,10,10);
+        rotate(radians(this.samplerAngle));
+        line(15 + UIMargin,0,this.samplerRadius-4 - UIMargin,0);
+        translate(this.samplerRadius, 0);  
+        ellipse(0,0,8,8); 
+
+        push();
+        rotate(radians(45));
+        line(4 + UIMargin ,0, 40 - 10 - UIMargin,0);
+        fill(this.samplerValue * 255);
+        ellipse(40,0,20,20);
+        pop();
+
+        push();
+       // rotate(radians(45));
+        //translate(30,0);
+        rotate(radians(-45));
+        line(4 + UIMargin ,0, 35 - UIMargin,0);
+        //ellipse(40,0,20,20);
+        translate(45,0);
+        rotate(-radians(this.samplerAngle - 45));
+        textAlign(CENTER, CENTER);
+	    textFont(debugFont);
+	    textSize(16);
+	    fill(255);
+        noStroke();
+        text('F', 0, 0);
+        pop();
+
         pop();
 
 
@@ -118,36 +144,91 @@ class FlareSynth{
        this.samplerValue = brightness(frame.get(int(this.samplerX) + frame.width/2, int(this.samplerY) +frame.height/2)) / 100.0;
        // console.log(int(this.samplerX) + frame.width/2);
      //  let  lp_freq = constrain(map(mouseY, height, 0, 10, 500), 10, 600);
-       let  lp_freq = constrain(map(this.samplerValue, 0, 1.0, 200, 600), 200, 600);
+       this.filterFreq = constrain(map(this.samplerValue, 0, 1.0, 200, 600), 200, 600);
        //console.log(lp_freq);
-       this.lowPass.freq(lp_freq);
-       this.lowPass.amp(0.1);
+       this.lowPass.freq(this.filterFreq);
+       this.lowPass.amp(0.2);
      
     }
 
     // ----------------------------------------------------------------
 
-    renderDebug(){
+    renderData(){
 
         push();
         noFill();
-        let spacing = 10;
-        stroke(255,40);
+        let spacing = 60;
         
-        translate(spacing, spacing);
+        translate(spacing, height - 50);
        // ellipse(0,0,20,20);
         for(let i = 0 ; i < this.analyzers.length ; i++){
-
-            image(this.analyzers[i].sampleImage,0,0); 
-            rect(0,0,this.analyzers[i].sampleImage.width, this.analyzers[i].sampleImage.height);
-            translate(this.analyzers[i].sampleImage.width + spacing,0);
+            this.analyzers[i].renderData();
+            translate(this.analyzers[i]. width + spacing,0);
         }
 
         pop();
 
-        fill(255,0,0);
-        text(frameRate(), 50, 100);
+        //fill(255,0,0);
+       // text(frameRate(), 50, 100);
 
+      this.renderFilter();
+
+
+    }
+
+    renderFilter(){
+        
+       push();
+
+       translate(width-70, height - 120);
+
+       stroke(255);
+       noFill();
+
+       ellipse(0,0,30,30);
+       textAlign(CENTER, CENTER);
+	   textFont(debugFont);
+	   textSize(16);
+       noStroke();
+       fill(255);
+       text("F",0,-2);
+       stroke(255);
+       rotate(radians(-90));
+       push();
+       rotate(radians(-135))
+       line(20,0,25,0);
+       push();
+       noStroke();
+       textSize(12);
+       translate(20,0);
+       rotate(-radians(135));
+       text("200",-5,10);
+       pop();
+       pop();
+       push();
+       rotate(radians(135))
+       line(20,0,25,0);
+       push();
+       noStroke();
+       textSize(12);
+       translate(20,0);
+       rotate(radians(135 + 180));
+       text("600",5,10);
+       pop();
+       pop();
+
+       push();
+       stroke(242, 190, 92);
+       noFill();
+       let currentAngle = map(this.filterFreq, 200, 600, -135, 135);
+       arc(0, 0, 45, 45, radians(-135), radians(currentAngle ));
+       rotate(radians(currentAngle));
+      // line(20,0,25,0);
+       
+       pop();
+
+
+       pop();
     }
 
     // ----------------------------------------------------------------

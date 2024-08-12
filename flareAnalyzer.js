@@ -1,5 +1,5 @@
 class FlareAnalizer{
-    constructor(angle, radius, width, height){
+    constructor(angle, radius, width, height, id, freq){
 
         this.angle = angle;
         this.radius = radius;
@@ -15,6 +15,8 @@ class FlareAnalizer{
         this.amplitudeSmooth = 0;
         this.easingFactor = 0.03;
         this.angularSpeed = random(0.03, 0.3);
+        this.id = id;
+        this.freq = freq;
 
     }
 
@@ -24,17 +26,25 @@ class FlareAnalizer{
         stroke(255);
         rectMode(CENTER);
         rotate(radians(this.angle));
-        line(0,0,this.radius,0);
+        line(15 + UIMargin, 0, this.radius - UIMargin, 0);
         translate(this.radius + this.height/2, 0);
         rotate(HALF_PI);
         
         rect(0,0,this.width,this.height);
         let lineY = this.height/2 - (this.amplitude*this.height);
         line(-this.width/2, lineY, this.width/2, lineY);
-        stroke(255,255,0);
-        lineY = this.height/2 - (this.amplitudeSmooth*this.height);
-        line(-this.width/2, lineY, this.width/2, lineY);
+      //  stroke(255,255,0);
+      //  lineY = this.height/2 - (this.amplitudeSmooth*this.height);
+      //  line(-this.width/2, lineY, this.width/2, lineY);
         
+        translate(0,-this.height);   
+        rotate(-radians(this.angle + 90));
+        textAlign(CENTER, CENTER);
+	    textFont(debugFont);
+	    textSize(16);
+	    fill(255);
+        noStroke();
+        text(this.id, 0, 0);
 
         pop();
     }
@@ -100,6 +110,47 @@ class FlareAnalizer{
 
     getAmplitudeSmooth(){
         return(this.amplitudeSmooth);
+    }
+
+    renderData(){
+        push();
+        let w = this.width;
+        let h =  this.height;
+        image(this.sampleImage,0,0);         
+            
+        push();
+        textAlign(CENTER, CENTER);
+        textFont(debugFont);
+        textSize(14);
+        fill(255);
+        noStroke();
+        text(this.id, w/2, -12);
+        textAlign(LEFT, CENTER);
+        fill(242, 190, 92);
+        text(nf(this.amplitudeSmooth, 0, 2), w + 5, 3);
+        fill(255);
+        text(nf(this.amplitude, 0, 2), w + 5, 18);
+        text(nf(this.freq, 0, 1), w + 5, 33);
+        pop();
+        // push(this.);
+        push();
+        translate(w/2, h/2);
+        let lineY = h/2 - (this.amplitude*h);
+        stroke(255);
+        line(-w/2, lineY, w/2, lineY);
+        //  pop();
+        fill(242, 190, 92,180);
+        noStroke();
+        lineY =  (this.amplitudeSmooth * h);
+        // line(-w/2, lineY, w/2, lineY);
+        rect(0-w/2,h/2,w,-lineY);
+        pop();
+
+        noFill();
+        stroke(255);
+        rect(0,0, w, h);
+        
+        pop();
     }
 
 }
