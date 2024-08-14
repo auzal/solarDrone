@@ -7,3 +7,35 @@ html, body {
 canvas {
   display: block;
 }
+
+#info{
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9pt;
+  background-color: #000;
+  color: #fff;
+  border: #fff;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: italic;
+}
+
+#info a{
+  color: #fff;
+  background-color: #444;
+  text-decoration: none;
+}
+
+#info a:active{
+  color: #fff;
+  background-color: #444;
+  text-decoration: none;
+}
+
+#info a:visited{
+  color: #fff;
+  background-color: #444;
+  text-decoration: none;
+}
