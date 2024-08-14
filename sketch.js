@@ -99,10 +99,9 @@ function draw() {
 
     // render information button
     infoButton.render();
-
-    // render border for sketch
-    renderBorder();
   } 
+  // render border for sketch
+  renderBorder();
 }
 
 // ----------------------------------------------------------------
